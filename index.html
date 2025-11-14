@@ -24,6 +24,7 @@
         .premium-section { background-color: #111; padding: 20px; border-radius: 10px; }
         .ad-block { background-color:#333; color:#fff; text-align:center; padding:15px; border-radius:8px; margin-top:20px; }
         footer { text-align: center; color: #aaa; margin-top: 40px; padding: 20px; }
+        .unlock-premium { display: none; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -41,8 +42,10 @@
     <main>
         <div class="buttons">
             <a href="https://paypal.me/yoelmh" class="donate-button" target="_blank">Donar para mejorar la página</a>
-            <!-- Botón Premium de PayPal integrado -->
-            <div id="paypal-button-container-P-33A11531UD7524024NELW6RI" class="premium-button"></div>
+            <!-- Botón Premium convertido en donación funcional -->
+            <a href="https://paypal.me/yoelmh?amount=5" class="premium-button" target="_blank">
+                Donar 5€ para desbloquear Premium
+            </a>
         </div>
 
         <section id="about">
@@ -58,7 +61,12 @@
                 <li>Más criptomonedas disponibles (30+)</li>
                 <li>Actualizaciones más frecuentes</li>
             </ul>
-            <p>¡Hazte Premium por solo 5€ y desbloquea todas estas ventajas!</p>
+            <p>¡Haz una donación de 5€ y recibe una clave para desbloquear estas ventajas!</p>
+            <input type="text" id="premiumKeyInput" placeholder="Introduce tu clave aquí">
+            <button onclick="unlockPremium()">Desbloquear Premium</button>
+            <div class="unlock-premium" id="premiumContent">
+                <p>¡Contenido Premium desbloqueado! Ahora puedes ver gráficos históricos adicionales.</p>
+            </div>
         </section>
 
         <section id="crypto">
@@ -87,29 +95,19 @@
         &copy; 2025 Crypto Dashboard. Todos los derechos reservados.
     </footer>
 
-    <!-- Script de PayPal para suscripción Premium -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AcJcfjgvM0M8ljKiNBhxHWdZIcJY55HMU8Uo151cZyqZTnL-pt9dzqdSOO2xA_pQ0RWhEVQDRcJHpQ47&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
     <script>
-      paypal.Buttons({
-          style: {
-              shape: 'rect',
-              color: 'gold',
-              layout: 'vertical',
-              label: 'subscribe'
-          },
-          createSubscription: function(data, actions) {
-            return actions.subscription.create({
-              plan_id: 'P-33A11531UD7524024NELW6RI'
-            });
-          },
-          onApprove: function(data, actions) {
-            alert("Suscripción completada. ID: " + data.subscriptionID);
-          }
-      }).render('#paypal-button-container-P-33A11531UD7524024NELW6RI');
-    </script>
+        const isPremium = false; // por defecto no desbloqueado
+        const validKey = "PREMIUM2025"; // clave que tú envías manualmente al donante
 
-    <script>
-        const isPremium = true;
+        function unlockPremium() {
+            const input = document.getElementById("premiumKeyInput").value;
+            if(input === validKey) {
+                document.getElementById("premiumContent").style.display = "block";
+                alert("¡Contenido Premium desbloqueado!");
+            } else {
+                alert("Clave incorrecta, revisa tu donación.");
+            }
+        }
 
         async function fetchCrypto() {
             const url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=30&page=1&sparkline=false';
